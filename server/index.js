@@ -18,9 +18,6 @@ const app = express();
 app.use(express.json());
 
 // ? Routes
-// app.get('/', (req,res) => {
-//     res.send('Hello there');
-// })
 
 // ! Dire à notre app d'utiliser le chemin "/api/user" pour la const userRoutes
 app.use('/api/user', userRoutes);

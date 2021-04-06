@@ -8,7 +8,6 @@ router.get("/", (req,res) => {
 })
 
 router.post('/register', async (req,res) => {
-    
     // * genere du salage pour le crypter
     const sal = await bcrypt.genSalt();
     // * Ensuite le hasher et le mélanger avec le salage
@@ -22,7 +21,13 @@ router.post('/register', async (req,res) => {
         password : hashedPassword
     })
 
-    res.send(await user.save());
+    // ! Sauvegarde le user
+    const result = await user.save();
+    // ! Création d'une nouvelle donnée data ou on enleve le password
+    const {password, ...data} = await result.toJSON();
+
+    // ? Afficher les données sans le mot de passe ce qui est bien niveau sécurité
+    res.send(data);
 })
 
 module.exports = router;
