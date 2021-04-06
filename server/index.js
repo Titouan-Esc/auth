@@ -14,6 +14,8 @@ mongoose.connect('mongodb://localhost/jwt_auth',{
 
 
 const app = express();
+// ! Permet de tester nos requêtes
+app.use(express.json());
 
 // ? Routes
 // app.get('/', (req,res) => {
