@@ -7,6 +7,7 @@ router.get("/", (req,res) => {
     res.send('Hollo from user');
 })
 
+// TODO Ajouter une route pour enregistrer un utilisateur
 router.post('/register', async (req,res) => {
     // * genere du salage pour le crypter
     const sal = await bcrypt.genSalt();
@@ -28,6 +29,29 @@ router.post('/register', async (req,res) => {
 
     // ? Afficher les données sans le mot de passe ce qui est bien niveau sécurité
     res.send(data);
+})
+
+// TODO Rajouter la route login
+router.post('/login', async (req,res) => {
+    // ? Etapes : 1 vérifier l'adresse de l'utilisateur
+    const user = await User.findOne({email: req.body.email});
+
+    if(!user){
+        return res.status(404).send({
+            message : "User not found"
+        });
+    }
+    
+    // ? 2 vérifier que le mot de passe est valide
+    if(!await bcrypt.compare(req.body.password, user.password)) {
+        return res.status(404).send({
+            message : "Le mot de passe n'est pas valide"
+        })
+    }
+
+    // ? 3 Créer un token de session pour l'utilisateur
+    res.send(user)
+
 })
 
 module.exports = router;
