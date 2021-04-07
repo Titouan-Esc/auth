@@ -1,6 +1,6 @@
 // ! Appel de Express plus le Router() d'express
 const router = require('express').Router();
-// ? Permet de crypter mon mot de passe
+// ? Permet de crypter mon mot de passe npm i bcryptjs
 const bcrypt = require('bcryptjs');
 // ? La dépendance qui permet de créer un token et de l'utiliser
 const jwt = require('jsonwebtoken');
