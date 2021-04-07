@@ -1,7 +1,9 @@
 // ! Appel de Express plus le Router() d'express
 const router = require('express').Router();
-const User = require('../model/user.model');
 const bcrypt = require('bcryptjs');
+// ? La dépendance qui permet de créer un token et de l'utiliser
+const jwt = require('jsonwebtoken');
+const User = require('../model/user.model');
 
 router.get("/", (req,res) => {
     res.send('Hollo from user');
@@ -33,7 +35,7 @@ router.post('/register', async (req,res) => {
 
 // TODO Rajouter la route login
 router.post('/login', async (req,res) => {
-    // ? Etapes : 1 vérifier l'adresse de l'utilisateur
+    // ? 1 vérifier l'adresse de l'utilisateur
     const user = await User.findOne({email: req.body.email});
 
     if(!user){
@@ -50,7 +52,18 @@ router.post('/login', async (req,res) => {
     }
 
     // ? 3 Créer un token de session pour l'utilisateur
-    res.send(user)
+    const token = jwt.sign({_id: user._id}, "secret");
+
+    // * conserver le token dans un cookie
+    res.cookie('jwt', token, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000 // Un jour en miliseconde
+    });
+
+
+    res.send({
+        message : "Bien connecté avec une bonne authentification"
+    });
 
 })
 
