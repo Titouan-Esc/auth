@@ -58,7 +58,7 @@ router.post('/login', async (req,res) => {
     // * conserver le token dans un cookie
     res.cookie('jwt', token, {
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000 // Un jour en miliseconde
+        maxAge: 24 * 60 * 60 * 1000 // ! Un jour en miliseconde
     });
 
 
@@ -69,11 +69,37 @@ router.post('/login', async (req,res) => {
 })
 
 // ? La route /user va servir de page route qui récupère les infos de l'utilisateur authentifié
-router.post('/user', async (req,res) => {
+router.get('/user', async (req,res) => {
+
+    // ? Récupère le cookie sur la machine
     const cookie = req.cookies['jwt'];
 
+    // ? Vérifier le cookie avec la méthde de jwt
+    const claims = await jwt.verify(cookie, 'secret');
 
-    res.send(cookie);
+    // ? Si mon cookie n'est pas valide retourner une erreur
+    if(!claims){
+        return res.status(401).send({
+            message : "Pas d'authentification"
+        })
+    };
+
+    // ? Créer un utilisateur avec l'id de claims
+    const user = await User.findOne({_id: claims._id});
+
+    // ? Utiliser la décomposition ou on enlève le password en créant un objet data
+    const {password, ...data} = await user.toJSON();
+
+    res.send(data);
+})
+
+// ? Mettre fin à notre cookie, se déconnecter
+router.post('/logout', async (req,res) => {
+    res.cookie('jwt', '', {maxAge : 0});
+
+    res.send({
+        message : 'Vous vous êtes bien déconnecté'
+    });
 })
 
 module.exports = router;
