@@ -1,5 +1,6 @@
 // ! Appel de Express plus le Router() d'express
 const router = require('express').Router();
+// ? Permet de crypter mon mot de passe
 const bcrypt = require('bcryptjs');
 // ? La dépendance qui permet de créer un token et de l'utiliser
 const jwt = require('jsonwebtoken');
@@ -33,7 +34,7 @@ router.post('/register', async (req,res) => {
     res.send(data);
 })
 
-// TODO Rajouter la route login
+// ? Rajouter la route /login qui sert à se connecter
 router.post('/login', async (req,res) => {
     // ? 1 vérifier l'adresse de l'utilisateur
     const user = await User.findOne({email: req.body.email});
@@ -65,6 +66,14 @@ router.post('/login', async (req,res) => {
         message : "Bien connecté avec une bonne authentification"
     });
 
+})
+
+// ? La route /user va servir de page route qui récupère les infos de l'utilisateur authentifié
+router.post('/user', async (req,res) => {
+    const cookie = req.cookies['jwt'];
+
+
+    res.send(cookie);
 })
 
 module.exports = router;
