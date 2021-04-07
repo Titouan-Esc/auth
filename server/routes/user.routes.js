@@ -6,9 +6,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../model/user.model');
 
-router.get("/", (req,res) => {
-    res.send('Hollo from user');
-})
 
 // TODO Ajouter une route pour enregistrer un utilisateur
 router.post('/register', async (req,res) => {
@@ -69,28 +66,36 @@ router.post('/login', async (req,res) => {
 })
 
 // ? La route /user va servir de page route qui récupère les infos de l'utilisateur authentifié
-router.get('/user', async (req,res) => {
+router.get('/', async (req,res) => {
 
-    // ? Récupère le cookie sur la machine
-    const cookie = req.cookies['jwt'];
 
-    // ? Vérifier le cookie avec la méthde de jwt
-    const claims = await jwt.verify(cookie, 'secret');
+    try {
+        // ? Récupère le cookie sur la machine
+        const cookie = req.cookies['jwt'];
 
-    // ? Si mon cookie n'est pas valide retourner une erreur
-    if(!claims){
+        // ? Vérifier le cookie avec la méthde de jwt
+        const claims = await jwt.verify(cookie, 'secret');
+
+        // ? Si mon cookie n'est pas valide retourner une erreur
+        if(!claims){
+            return res.status(401).send({
+                message : "Pas d'authentification"
+            })
+        };
+
+        // ? Créer un utilisateur avec l'id de claims
+        const user = await User.findOne({_id: claims._id});
+
+        // ? Utiliser la décomposition ou on enlève le password en créant un objet data
+        const {password, ...data} = await user.toJSON();
+
+        res.send(data);
+
+    }catch (error) {
         return res.status(401).send({
             message : "Pas d'authentification"
         })
-    };
-
-    // ? Créer un utilisateur avec l'id de claims
-    const user = await User.findOne({_id: claims._id});
-
-    // ? Utiliser la décomposition ou on enlève le password en créant un objet data
-    const {password, ...data} = await user.toJSON();
-
-    res.send(data);
+    }
 })
 
 // ? Mettre fin à notre cookie, se déconnecter
