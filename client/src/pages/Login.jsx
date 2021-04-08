@@ -42,7 +42,7 @@ const Login = () => {
                     <input type="email" className="form-control" placeholder="email" required value={email} onChange={e=>setEmail(e.target.value)}/>                 
 
                     <input type="password" className="form-control" placeholder="Password" required value={password} onChange={e=>setPassword(e.target.value)}/>
-                <button className="w-100 btn btn-lg btn-primary" type="submit">Register</button>
+                <button className="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
             </form>
     )
 }
