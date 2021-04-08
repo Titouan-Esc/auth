@@ -8,8 +8,22 @@ const Register = () => {
     const [password, setPassword] = useState("");
 
     // ! Création d'une fonction pour console.log les informations qu'on à rentré dans notre formulaire
-    const submit = (e) => {
+    const submit = async (e) => {
         e.preventDefault();
+
+        const response = await fetch('http://localhost:8000/api/user/register', {
+            method : 'POST',
+            headers : {'Content-Type' : 'application/json'},
+            body : JSON.stringify({
+                username,
+                email,
+                password
+            })
+        });
+
+        const content = await response.json();
+
+        console.log(content);
 
         console.log({
             username,
