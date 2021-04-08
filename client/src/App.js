@@ -10,15 +10,17 @@ import User from './pages/User';
 function App() {
   return (
     <div className="App">
-      <NavBar/>
-      <main className="form-signin">
         <BrowserRouter>
-          <Route path = "/" exact component={Home}/>
-          <Route path = "/register"  component={Register}/>
-          <Route path = "/login"  component={Login}/>
-          <Route path = "/user"  component={User}/>
+          <NavBar/>
+          <main className="form-signin">
+            <Switch>
+              <Route path = "/" exact component={Home}/>
+              <Route path = "/register"  component={Register}/>
+              <Route path = "/login"  component={Login}/>
+              <Route path = "/user"  component={User}/>
+            </Switch>
+          </main>
         </BrowserRouter>
-      </main>
     </div>
   );
 }
