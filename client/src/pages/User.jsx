@@ -34,6 +34,8 @@ const User = () => {
             // ? Récupérer les cookies que nous avons créer
             credentials : 'include',
         });
+
+        setUsername('')
     }
 
     // ? Créer une variable let link
