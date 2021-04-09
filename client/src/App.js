@@ -1,6 +1,6 @@
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 // ? Ajouter useMemo pour la mémorisation 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import './App.css';
 import NavBar from './components/NavBar';
 import Login from './pages/Login';
@@ -16,6 +16,27 @@ function App() {
 
   // ? Permet de mémoriser la démarche à faire si la valeur ou le state de user est affecté
   const value = useMemo(()=>({user, setUser}), [user, setUser]);
+
+
+  useEffect(() => {
+      (
+          async () => {
+              const response = await fetch('http://localhost:8000/api/user', {
+                  header : {'Content-Type' : 'application/json'},
+                  credentials : 'include'
+              })
+  
+              const content = await response.json();
+  
+              // * Condition pour savoir si le content recois un id il renvoie setUser(content)
+              if(content._id) {
+                  setUser(content);
+              }
+  
+          }
+      )()
+  }, []);
+
 
 
   return (
