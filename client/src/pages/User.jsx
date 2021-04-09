@@ -10,21 +10,24 @@ const User = () => {
     const {user, setUser} = useContext(UserContext);
 
     // ? useEffect pour récupérer le cookie lors de la connection
-    useEffect(() => {
-        (
-            async () => {
-            const response = await fetch('http://localhost:8000/api/user', {
-                header : {'Content-Type' : 'application/json'},
-                credentials : 'include'
-            })
+    // useEffect(() => {
+    //     (
+    //         async () => {
+    //             const response = await fetch('http://localhost:8000/api/user', {
+    //                 header : {'Content-Type' : 'application/json'},
+    //                 credentials : 'include'
+    //             })
 
-            const content = await response.json();
+    //             const content = await response.json();
 
-            setUser(content);
+    //             // * Condition pour savoir si le content recois un id il renvoie setUser(content)
+    //             if(content._id) {
+    //                 setUser(content);
+    //             }
 
-            }
-        )()
-    }, []);
+    //         }
+    //     )()
+    // }, []);
 
     const logout = async () => {
         await fetch('http://localhost:8000/api/user/logout', {
@@ -43,7 +46,7 @@ const User = () => {
     let link;
 
     // ? Faire une condition pour dire que si username n'est pas, envoyer vers login et si oui logout. Cette condition est du JSX donc du HTML avec un peu de JS
-    if(!user.username){
+    if(!user){
         link = (
             <Link to='/login' className='btn btn-success'>Login</Link>
         )
@@ -58,7 +61,7 @@ const User = () => {
     return (
         <div>
             {/* Reprend le username du client qui c'est connecté */}
-            {user.username ? `Vous êtes connecté ${user.username}` : 'Se connecter'}
+            {user ? `Vous êtes connecté ${user.username}` : 'Se connecter'}
             {link}
         </div>
     )

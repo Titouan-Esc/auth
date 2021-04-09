@@ -5,7 +5,7 @@ import { UserContext } from '../User.Context'
 
 
 const Login = () => {
-    const {user} = useContext(UserContext);
+    const {user, setUser} = useContext(UserContext);
 
 
     const [email, setEmail] = useState("");
@@ -30,6 +30,17 @@ const Login = () => {
             })
         });
 
+        const response = await fetch('http://localhost:8000/api/user', {
+                    header : {'Content-Type' : 'application/json'},
+                    credentials : 'include'
+                })
+
+        const content = await response.json();
+
+        if(content._id) {
+            setUser(content);
+        }
+        
         setRedirect(true);
     }
 
