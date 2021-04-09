@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext} from 'react'
 import { Link } from 'react-router-dom';
+import { UserContext } from '../User.Context';
+
 
 
 
 const User = () => {
 
-    const [username, setUsername] = useState('');
-
+    const {user, setUser} = useContext(UserContext);
 
     // ? useEffect pour récupérer le cookie lors de la connection
     useEffect(() => {
@@ -19,7 +20,7 @@ const User = () => {
 
             const content = await response.json();
 
-            setUsername(content.username);
+            setUser(content);
 
             }
         )()
@@ -35,14 +36,14 @@ const User = () => {
             credentials : 'include',
         });
 
-        setUsername('')
+        setUser(null);
     }
 
     // ? Créer une variable let link
     let link;
 
     // ? Faire une condition pour dire que si username n'est pas, envoyer vers login et si oui logout. Cette condition est du JSX donc du HTML avec un peu de JS
-    if(!username){
+    if(!user.username){
         link = (
             <Link to='/login' className='btn btn-success'>Login</Link>
         )
@@ -57,7 +58,7 @@ const User = () => {
     return (
         <div>
             {/* Reprend le username du client qui c'est connecté */}
-            {username ? `Vous êtes connecté ${username}` : 'Se connecter'}
+            {user.username ? `Vous êtes connecté ${user.username}` : 'Se connecter'}
             {link}
         </div>
     )
